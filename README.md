@@ -297,8 +297,32 @@ Join.inner(customers, excel, on=(lambda c: str(c["id"]), "Customer ID"))
 5. **Duplicate keys** on the right give one pair per match (`inner`, `left`), or every match in the
    list (`attach`). With `many=False`, the first match wins.
 6. **Nothing is written.** Joins read the tables and return new lists.
-7. **Cost:** a hash join, O(n + m). The right side (the children for `attach`) is indexed once in a
-   dict, so memory is about the size of both tables, which TinyDB already reads whole anyway.
+7. **Cost:** a hash join, O(n + m). Memory is about the size of both tables, which TinyDB already
+   reads whole anyway. See [Performance](#performance).
+
+## Performance
+
+Everything runs in memory, in pure Python. A join reads each side once, indexes the right side in a
+dict, then walks the left side, so the time grows in a straight line with the number of documents.
+
+Measured with 10k customers × 50k orders in memory storage (best of 5 runs):
+
+| Machine | Reading both tables | `inner`, `left` or `attach` (reading included) |
+|---|---|---|
+| Desktop, Intel i5-13400F, Python 3.12 | 31 ms | 54 to 65 ms |
+| Set-top box, Amlogic S905X (4× Cortex-A53, 1.9 GB RAM), Python 3.10 | 0.66 s | 1.4 to 2.1 s |
+
+On the set-top box the whole process peaked at 128 MiB of memory. Joining 1k customers stored in
+Redis on another machine with 5k orders in a local JSON file took 171 ms there, network included,
+and gave the same pairs as a brute-force nested loop.
+
+What that means in practice:
+
+- Thousands to tens of thousands of documents: fine, even on a Raspberry Pi or a set-top box.
+- Hundreds of thousands, or a join on every web request: use a real database (SQLite, DuckDB).
+- Half the time is TinyDB reading the tables, and a table is read again on every join. To join the
+  same table several times, read it once and pass the list: `customers_rows = list(customers)`.
+- With a remote storage (Redis, S3), every read is a round trip; the list trick helps even more.
 
 ## Not included
 
@@ -321,18 +345,11 @@ make test      # pytest with coverage
 make format    # black
 ```
 
-- Tests with `pytest`, coverage 100%: every rule above has a test, plus joins across a JSON file and
-  in-memory storage, and the `doc_id` reuse case.
+- Tests with `pytest`, 100% line and branch coverage (CI fails below it): every rule above has a
+  test, plus empty tables, self-joins, generators and joins across a JSON file and memory storage.
 - Full type hints on every function.
 - CI on Python 3.10 to 3.14, and TinyDB 4.8 (the oldest supported). A GitHub release publishes to
   PyPI.
-- Benchmark, 10k customers × 50k orders in memory storage:
-  - desktop (i5-13400F, Python 3.12): about 60 ms for any of the three functions, half of it TinyDB
-    reading the two tables;
-  - set-top box (Amlogic S905X, 4× Cortex-A53, 1.9 GB RAM, Python 3.10): 1.4 to 2.1 s, of which
-    0.66 s is reading the tables; peak RSS 128 MiB.
-- On the same set-top box, 1k customers in Redis (on another machine) joined with 5k orders in a
-  local JSON file: 171 ms, results checked against a brute-force nested loop.
 
 ## License
 
