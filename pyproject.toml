@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "tinydb-join"
+version = "0.1.0"
+description = "Join TinyDB tables in memory, across databases and storages."
+authors = ["Ferdina Kusumah <ferdina.kusumah@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "tinydbjoin" }]
+
+homepage = "https://github.com/FerdinaKusumah/tinydb-join"
+repository = "https://github.com/FerdinaKusumah/tinydb-join"
+keywords = ["tinydb", "join", "relations", "eager-loading", "database"]
+
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+tinydb = ">=4.8,<5"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8"
+pytest-cov = ">=5"
+black = ">=24"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["*_test.py"]
+addopts = "--cov=tinydbjoin --cov-branch --cov-report=term-missing --cov-fail-under=100"
