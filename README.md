@@ -326,9 +326,13 @@ make format    # black
 - Full type hints on every function.
 - CI on Python 3.10 to 3.14, and TinyDB 4.8 (the oldest supported). A GitHub release publishes to
   PyPI.
-- Benchmark, 10k customers × 50k orders in memory storage, on a desktop (i5, Python 3.12): about
-  60 ms for any of the three functions, half of it TinyDB reading the two tables. Peak memory for
-  `inner`: 32 MiB.
+- Benchmark, 10k customers × 50k orders in memory storage:
+  - desktop (i5-13400F, Python 3.12): about 60 ms for any of the three functions, half of it TinyDB
+    reading the two tables;
+  - set-top box (Amlogic S905X, 4× Cortex-A53, 1.9 GB RAM, Python 3.10): 1.4 to 2.1 s, of which
+    0.66 s is reading the tables; peak RSS 128 MiB.
+- On the same set-top box, 1k customers in Redis (on another machine) joined with 5k orders in a
+  local JSON file: 171 ms, results checked against a brute-force nested loop.
 
 ## License
 
