@@ -1,5 +1,9 @@
 # tinydb-join
 
+[![CI](https://github.com/FerdinaKusumah/tinydb-join/actions/workflows/ci.yml/badge.svg)](https://github.com/FerdinaKusumah/tinydb-join/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/tinydbjoin.svg)](https://pypi.org/project/tinydbjoin/)
+[![Python](https://img.shields.io/pypi/pyversions/tinydbjoin.svg)](https://pypi.org/project/tinydbjoin/)
+
 Join TinyDB tables in memory: tables in the same database, in different database files, or on
 different storages (JSON file, memory, Redis or S3 through
 [tinydb-storage](https://github.com/FerdinaKusumah/tinydb-storage)). One small dependency: `tinydb`.
