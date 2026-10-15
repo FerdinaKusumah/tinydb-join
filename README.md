@@ -13,7 +13,7 @@ database server is more than the job needs.
 ## Installation
 
 ```shell
-pip install tinydb-join
+pip install tinydbjoin
 ```
 
 Requires Python 3.10+ and TinyDB 4.8+.

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "tinydb-join"
+name = "tinydbjoin"
 version = "0.1.0"
 description = "Join TinyDB tables in memory, across databases and storages."
 authors = ["Ferdina Kusumah <ferdina.kusumah@gmail.com>"]

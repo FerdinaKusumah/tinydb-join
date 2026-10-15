@@ -8,7 +8,10 @@ jobs:
   pypi-publish:
     name: Upload Release to PyPI
     runs-on: ubuntu-latest
-    environment: Release
+    environment: pypi
+    permissions:
+      # Trusted Publishing: PyPI accepts this job's OIDC token instead of an API token.
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -34,6 +37,4 @@ jobs:
         run: poetry build
 
       - name: Publish to PyPI
-        run: poetry publish
-        env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+        uses: pypa/gh-action-pypi-publish@v1.12.4
